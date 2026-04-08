@@ -67,14 +67,15 @@ export default function ExportButton() {
   }, [activeModule, renderImage]);
 
   return (
-    <div className="relative">
+    <div className="relative w-full sm:w-auto">
       <motion.button
         onClick={() => setOpen((value) => !value)}
         whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.92 }}
         aria-label="Share this month"
         aria-expanded={open}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full
+        className="w-full h-9 flex items-center justify-center gap-1.5 px-3 rounded-full
+                   min-w-0 sm:min-w-[84px]
                    text-[12px] font-semibold
                    border border-[var(--mod-primary)]/30
                    text-[var(--mod-primary)]

@@ -27,8 +27,8 @@ export default function MarkTodayButton() {
       whileHover={markedToday ? {} : { scale: 1.04 }}
       whileTap={markedToday ? {} : { scale: 0.94 }}
       aria-label={markedToday ? "Today already marked" : `Mark today active for ${moduleConfig.label}`}
-      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full
-                 text-[12px] font-semibold transition-colors
+      className="w-full h-9 flex items-center justify-center gap-1.5 px-3 rounded-full
+                 min-w-0 sm:min-w-[110px] text-[12px] font-semibold transition-colors
                  border focus-visible:outline-none
                  focus-visible:ring-2 focus-visible:ring-[var(--mod-primary)]/40
                  disabled:cursor-default"
@@ -39,7 +39,7 @@ export default function MarkTodayButton() {
       }}
     >
       <CheckCircle2 size={13} />
-      {markedToday ? "Marked" : "Mark Today"}
+      <span>{markedToday ? "Marked" : "Mark Today"}</span>
       <span className="hidden sm:inline opacity-80">
         {currentStreak > 0 ? `· ${currentStreak}d` : ""}
       </span>

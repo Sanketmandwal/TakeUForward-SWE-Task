@@ -20,13 +20,13 @@ export default function ModuleSelector() {
   const modules = Object.values(MODULES);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex flex-col items-start gap-2 min-w-0 sm:flex-row sm:items-center sm:gap-3">
 
       {/* ── Module pill tabs ───────────────────────────────────────── */}
       <div
         role="tablist"
         aria-label="Select TakeUforward module"
-        className="flex items-center gap-1 p-1 rounded-xl
+        className="flex flex-wrap items-center gap-1 p-1 rounded-xl w-full sm:w-auto
                    bg-[var(--surface)] border border-[var(--border)]
                    shadow-sm"
         style={{ backdropFilter: "blur(8px)" }}
@@ -41,7 +41,7 @@ export default function ModuleSelector() {
               aria-label={mod.fullLabel}
               onClick={() => switchModule(mod.id)}
               className={clsx(
-                "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg",
+                "relative flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg flex-1 sm:flex-none",
                 "text-xs font-semibold transition-colors duration-150",
                 "focus-visible:outline-none focus-visible:ring-2",
                 "focus-visible:ring-[var(--mod-primary)] focus-visible:ring-offset-1",
@@ -76,7 +76,7 @@ export default function ModuleSelector() {
           animate={{ opacity: 1, y: 0  }}
           exit={{   opacity: 0, y:  4  }}
           transition={{ duration: 0.2 }}
-          className="hidden sm:block text-xs font-medium text-[var(--text-muted)]"
+          className="text-[11px] sm:text-xs font-medium text-[var(--text-muted)] truncate max-w-full"
         >
           {moduleConfig.fullLabel}
         </motion.span>
@@ -91,6 +91,7 @@ export default function ModuleSelector() {
             animate={{ scale: 1,   opacity: 1 }}
             exit={{   scale: 0.5, opacity: 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 22 }}
+            className="self-start sm:self-auto"
           >
             <Badge variant="streak" aria-label={`${currentStreak} day streak`}>
               🔥 {currentStreak}d

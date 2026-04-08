@@ -11,11 +11,10 @@ export default function ThemeToggle() {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.90 }}
-      className="relative flex items-center justify-center rounded-full
+      className="relative h-9 w-9 flex items-center justify-center rounded-full
                  border transition-colors duration-200 focus-visible:outline-none
                  focus-visible:ring-2 focus-visible:ring-[var(--mod-primary)]"
       style={{
-        width: 36, height: 36,
         background: isDark
           ? "rgba(255,255,255,0.08)"
           : "rgba(0,0,0,0.06)",

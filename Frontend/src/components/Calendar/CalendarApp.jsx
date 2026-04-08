@@ -39,9 +39,9 @@ export default function CalendarApp() {
       <DayNotePopover />
 
       <div className="w-full max-w-[780px] mx-auto">
-        <div className="flex items-center justify-between mb-3 px-1">
+        <div className="flex flex-col gap-3 mb-3 px-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
           <ModuleSelector />
-          <div className="flex items-center gap-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_36px] gap-2 items-center sm:flex sm:flex-nowrap sm:items-center sm:justify-end">
             <MarkTodayButton />
             <ExportButton />
             <ThemeToggle />
