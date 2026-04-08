@@ -1,0 +1,341 @@
+/* ─── Tailwind ───────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Outfit:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Fonts ──────────────────────────────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODULE THEMING SYSTEM
+   ─────────────────────
+   Set data-module="dsa|lld|sql" on the root div.
+   Every component uses var(--mod-*) — switching module = one DOM change.
+   ═══════════════════════════════════════════════════════════════════════ */
+[data-module="dsa"] {
+  --mod-primary: #0ea5e9;
+  --mod-dark:    #0284c7;
+  --mod-darker:  #0369a1;
+  --mod-light:   #e0f2fe;
+  --mod-light2:  #bae6fd;
+  --mod-text:    #0c4a6e;
+}
+[data-module="lld"] {
+  --mod-primary: #8b5cf6;
+  --mod-dark:    #7c3aed;
+  --mod-darker:  #6d28d9;
+  --mod-light:   #ede9fe;
+  --mod-light2:  #ddd6fe;
+  --mod-text:    #2e1065;
+}
+[data-module="sql"] {
+  --mod-primary: #10b981;
+  --mod-dark:    #059669;
+  --mod-darker:  #047857;
+  --mod-light:   #d1fae5;
+  --mod-light2:  #a7f3d0;
+  --mod-text:    #064e3b;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   LIGHT / DARK SURFACE TOKENS
+   ═══════════════════════════════════════════════════════════════════════ */
+:root {
+  --bg:              #f1f5f9;
+  --surface:         #ffffff;
+  --surface-2:       #f8fafc;
+  --surface-dynamic: #e2e8f0;
+  --border:          #e2e8f0;
+  --text:            #0f172a;
+  --text-muted:      #64748b;
+  --text-faint:      #94a3b8;
+  --shadow-sm:  0 1px 3px  rgba(0,0,0,0.06);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,0.14);
+}
+.dark {
+  --bg:              #0f172a;
+  --surface:         #1e293b;
+  --surface-2:       #263347;
+  --surface-dynamic: #334155;
+  --border:          #334155;
+  --text:            #e2e8f0;
+  --text-muted:      #94a3b8;
+  --text-faint:      #475569;
+  --shadow-sm:  0 1px 3px  rgba(0,0,0,0.30);
+  --shadow-md:  0 4px 16px rgba(0,0,0,0.40);
+  --shadow-lg:  0 16px 48px rgba(0,0,0,0.55);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BASE RESET
+   ═══════════════════════════════════════════════════════════════════════ */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100dvh;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s, color 0.3s;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    text-wrap: balance;
+  }
+
+  button { cursor: pointer; background: none; border: none; }
+  img    { display: block; max-width: 100%; }
+
+  ::selection {
+    background: var(--mod-light);
+    color: var(--mod-text);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--mod-primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   COMPONENT STYLES
+   ═══════════════════════════════════════════════════════════════════════ */
+@layer components {
+
+  /* ── Calendar card shell ──────────────────────────────────────────── */
+  .calendar-card {
+    display: block;
+    width: 100%;
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  /* ── Table cell reset — CRITICAL: keeps td as table cell ─────────── */
+  td[role="gridcell"] {
+    padding: 0;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  /* ── Day cell wrapper (inside <td>) ──────────────────────────────── */
+  /*
+   * This div sits INSIDE the <td>. It:
+   *   1. Provides the colored range band via ::before pseudo-element
+   *   2. Centers the day button circle
+   *
+   * DO NOT put display:flex on the <td> itself — that breaks table layout.
+   */
+  .day-cell-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 34px;
+    width: 100%;
+  }
+
+  /* ── Range band — in-range days ──────────────────────────────────── */
+  .day-cell-wrapper.in-range::before,
+  .day-cell-wrapper.preview::before {
+    content: '';
+    position: absolute;
+    top: 5px; bottom: 5px; left: 0; right: 0;
+    background: var(--mod-light);
+    z-index: 0;
+  }
+  .dark .day-cell-wrapper.in-range::before,
+  .dark .day-cell-wrapper.preview::before {
+    background: color-mix(in srgb, var(--mod-primary) 18%, transparent);
+  }
+
+  /* ── Range band — start day (right half only) ────────────────────── */
+  .day-cell-wrapper.range-start::before {
+    content: '';
+    position: absolute;
+    top: 5px; bottom: 5px;
+    left: 50%; right: 0;
+    background: var(--mod-light);
+    z-index: 0;
+  }
+  .dark .day-cell-wrapper.range-start::before {
+    background: color-mix(in srgb, var(--mod-primary) 18%, transparent);
+  }
+
+  /* ── Range band — end day (left half only) ───────────────────────── */
+  .day-cell-wrapper.range-end::before {
+    content: '';
+    position: absolute;
+    top: 5px; bottom: 5px;
+    right: 50%; left: 0;
+    background: var(--mod-light);
+    z-index: 0;
+  }
+  .dark .day-cell-wrapper.range-end::before {
+    background: color-mix(in srgb, var(--mod-primary) 18%, transparent);
+  }
+
+  /* Start === End → no band */
+  .day-cell-wrapper.range-start.range-end::before { display: none; }
+
+  /* Round the band caps at row edges */
+  .day-cell-wrapper.band-round-left::before  { border-radius: 9999px 0 0 9999px; }
+  .day-cell-wrapper.band-round-right::before { border-radius: 0 9999px 9999px 0; }
+
+  /* ── Day button circle ───────────────────────────────────────────── */
+  .day-btn {
+    position: relative;
+    z-index: 1;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    transition: background 140ms, color 140ms, transform 140ms, box-shadow 140ms;
+    user-select: none;
+    line-height: 1;
+  }
+
+  .day-btn:hover:not(:disabled):not(.is-range-start) {
+    background: var(--mod-light);
+    transform: scale(1.1);
+  }
+  .dark .day-btn:hover:not(:disabled):not(.is-range-start) {
+    background: color-mix(in srgb, var(--mod-primary) 22%, transparent);
+  }
+  .day-btn:active:not(:disabled) { transform: scale(0.9); }
+
+  /* Today ring — pulsing */
+  .day-btn.is-today {
+    font-weight: 700;
+    animation: todayPulse 2.5s ease-in-out infinite;
+  }
+
+  /* Range start / end — filled solid circle */
+  .day-btn.is-range-start {
+    background: var(--mod-primary) !important;
+    color: white !important;
+    font-weight: 700;
+    box-shadow: 0 2px 10px color-mix(in srgb, var(--mod-primary) 45%, transparent);
+    transform: none !important;
+  }
+
+  /* ── Note dot ────────────────────────────────────────────────────── */
+  .note-dot {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--mod-primary);
+    z-index: 2;
+  }
+
+
+  /* ── Streak emoji ghost (behind date number) ──────────────────────── */
+  .streak-ghost {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    line-height: 1;
+    opacity: 0.22;
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+    filter: saturate(1.8);
+  }
+
+  /* ── Streak day button — subtle glow ring ─────────────────────────── */
+  .day-btn.streak-day {
+    box-shadow:
+      0 0 0 1.5px color-mix(in srgb, var(--mod-primary) 45%, transparent),
+      0 0 10px  color-mix(in srgb, var(--mod-primary) 22%, transparent);
+  }
+  .day-btn.streak-day:hover {
+    box-shadow:
+      0 0 0 2px color-mix(in srgb, var(--mod-primary) 65%, transparent),
+      0 0 16px color-mix(in srgb, var(--mod-primary) 35%, transparent);
+  }
+
+  /* Weekend / holiday text colors */
+  .day-btn.weekend  { color: var(--mod-primary); font-weight: 600; }
+  .day-btn.holiday  { color: #f97316; }
+
+  /* ── Notes textarea ──────────────────────────────────────────────── */
+  .notes-textarea {
+    width: 100%;
+    resize: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 12.5px;
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .notes-textarea:focus {
+    outline: none;
+    border-color: var(--mod-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mod-primary) 15%, transparent);
+  }
+  .notes-textarea::placeholder { color: var(--text-faint); }
+
+  /* ── Heatmap cell ────────────────────────────────────────────────── */
+  .heatmap-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    transition: transform 120ms;
+    flex-shrink: 0;
+  }
+  .heatmap-cell:hover { transform: scale(1.5); }
+
+  /* ── Confetti canvas overlay ─────────────────────────────────────── */
+  #confetti-canvas {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Today pulsing ring */
+@keyframes todayPulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--mod-primary); }
+  50%       { box-shadow: 0 0 0 4px color-mix(in srgb, var(--mod-primary) 35%, transparent); }
+}
