@@ -1,9 +1,16 @@
 import { motion } from "framer-motion";
+import { createPortal } from "react-dom";
 
-export default function YearPicker({ currentYear, onSelect, onClose }) {
+export default function YearPicker({ anchorRect, currentYear, onSelect, onClose }) {
   const years = Array.from({ length: 11 }, (_, index) => currentYear - 5 + index);
+  const desktopLeft = anchorRect
+    ? Math.max(16, Math.min(anchorRect.right - 228, window.innerWidth - 228 - 16))
+    : Math.max(16, window.innerWidth - 228 - 16);
+  const desktopTop = anchorRect
+    ? Math.min(anchorRect.bottom + 10, window.innerHeight - 170 - 16)
+    : Math.max(16, window.innerHeight * 0.12);
 
-  return (
+  const content = (
     <>
       <motion.div
         className="fixed inset-0 z-40"
@@ -12,9 +19,10 @@ export default function YearPicker({ currentYear, onSelect, onClose }) {
         exit={{ opacity: 0 }}
         onClick={onClose}
       />
+
       <motion.div
         className="fixed z-50 inset-x-3 bottom-3 rounded-2xl overflow-hidden
-                   sm:absolute sm:inset-x-auto sm:bottom-[12%] sm:right-[4%]"
+                   sm:inset-x-auto sm:bottom-auto"
         style={{
           width: "auto",
           maxWidth: "calc(100vw - 24px)",
@@ -22,6 +30,8 @@ export default function YearPicker({ currentYear, onSelect, onClose }) {
           backdropFilter: "blur(22px)",
           border: "1px solid rgba(255,255,255,0.11)",
           boxShadow: "0 12px 48px rgba(0,0,0,0.65)",
+          left: window.innerWidth >= 640 ? `${desktopLeft}px` : undefined,
+          top: window.innerWidth >= 640 ? `${desktopTop}px` : undefined,
         }}
         initial={{ opacity: 0, scale: 0.94, y: 14 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -31,9 +41,11 @@ export default function YearPicker({ currentYear, onSelect, onClose }) {
         <div className="sm:hidden flex justify-center pt-2 pb-1">
           <span className="h-1.5 w-10 rounded-full bg-white/15" />
         </div>
+
         <p className="px-4 pt-3 pb-1 text-[10px] font-semibold tracking-widest uppercase text-white/35">
           Jump to year
         </p>
+
         <div className="grid grid-cols-3 gap-1 px-2 pb-3 sm:w-[228px]">
           {years.map((year) => (
             <motion.button
@@ -64,4 +76,6 @@ export default function YearPicker({ currentYear, onSelect, onClose }) {
       </motion.div>
     </>
   );
+
+  return createPortal(content, document.body);
 }

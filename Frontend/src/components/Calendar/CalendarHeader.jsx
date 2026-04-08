@@ -32,6 +32,7 @@ export default function CalendarHeader() {
 
   const [direction, setDirection] = useState(0);
   const [showYearPicker, setShowYearPicker] = useState(false);
+  const [yearPickerAnchor, setYearPickerAnchor] = useState(null);
   const previousDateRef = useRef(viewDate);
   const pageKey = `${year}-${monthIndex}`;
 
@@ -47,6 +48,11 @@ export default function CalendarHeader() {
   const handleNext = () => {
     setDirection(1);
     goToNextMonth();
+  };
+
+  const handleYearClick = (anchorRect) => {
+    setYearPickerAnchor(anchorRect ?? null);
+    setShowYearPicker((value) => !value);
   };
 
   return (
@@ -77,7 +83,7 @@ export default function CalendarHeader() {
             modColor={moduleConfig.primaryColor}
             monthName={monthName}
             year={year}
-            onYearClick={() => setShowYearPicker((value) => !value)}
+            onYearClick={handleYearClick}
           />
 
           <motion.div
@@ -94,9 +100,13 @@ export default function CalendarHeader() {
       <AnimatePresence>
         {showYearPicker && (
           <YearPicker
+            anchorRect={yearPickerAnchor}
             currentYear={year}
             onSelect={jumpToYear}
-            onClose={() => setShowYearPicker(false)}
+            onClose={() => {
+              setShowYearPicker(false);
+              setYearPickerAnchor(null);
+            }}
           />
         )}
       </AnimatePresence>

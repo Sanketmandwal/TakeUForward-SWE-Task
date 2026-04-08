@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function HeroChevronOverlay({ modColor, monthName, year, onYearClick }) {
   const [hovered, setHovered] = useState(false);
+  const buttonRef = useRef(null);
 
   return (
     <>
@@ -52,7 +53,8 @@ export default function HeroChevronOverlay({ modColor, monthName, year, onYearCl
         </AnimatePresence>
 
         <button
-          onClick={onYearClick}
+          ref={buttonRef}
+          onClick={() => onYearClick(buttonRef.current?.getBoundingClientRect())}
           aria-label={`Change year - currently ${year}`}
           className="text-right rounded-xl px-3 py-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
           style={{
